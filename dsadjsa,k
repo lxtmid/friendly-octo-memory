@@ -5415,59 +5415,45 @@
                             var w = this.canvas.width;
                             var h = this.canvas.height;
 
-                            // Фон с плавным градиентом
+                            // ---------- Очистка ----------
                             ctx.clearRect(0, 0, w, h);
-                            var bgGradient = ctx.createLinearGradient(0, 0, w, h);
-                            bgGradient.addColorStop(0, "rgba(5, 5, 20, 0.9)");
-                            bgGradient.addColorStop(1, "rgba(20, 20, 50, 0.95)");
-                            ctx.fillStyle = bgGradient;
-                            ctx.fillRect(0, 0, w, h);
 
-                            // Неоновые панели
-                            let panelWidth = w/12;
-                            let glowColor = "hsla(" + this.hue + ", 80%, 60%, 0.6)";
+                            // ---------- Боковые неоновые панели ----------
+                            let panelWidth = w / 12;
+                            let neonColor = "hsla(" + this.hue + ", 90%, 50%, 0.9)";
 
-                            ctx.fillStyle = glowColor;
-                            ctx.shadowColor = glowColor;
-                            ctx.shadowBlur = 20;
-                            ctx.fillRect(0, h*0.05, panelWidth, h*0.9);
-                            ctx.fillRect(w - panelWidth, h*0.05, panelWidth, h*0.9);
+                            ctx.fillStyle = neonColor;
+                            ctx.shadowColor = neonColor;
+                            ctx.shadowBlur = 15;
+
+                            // Левая панель
+                            ctx.fillRect(0, 0, panelWidth, h);
+
+                            // Правая панель
+                            ctx.fillRect(w - panelWidth, 0, panelWidth, h);
+
                             ctx.shadowBlur = 0;
 
-                            // Основной HUD текст
-                            ctx.fillStyle = "hsla(" + this.hue + ", 70%, 80%, 1)";
-                            ctx.font = "30pt Play"; // увеличенный размер для футуристичности
-                            ctx.textAlign = "left";
+                            // ---------- Прозрачный центр ----------
+                            ctx.fillStyle = "rgba(0,0,0,0.0)"; // полностью прозрачный
+                            ctx.fillRect(panelWidth, 0, w - 2*panelWidth, h);
+
+                            // ---------- Основной текст HUD ----------
+                            ctx.fillStyle = neonColor;
+                            ctx.font = `${Math.round(h/3)}pt Play`; // крупный неоновый текст
+                            ctx.textAlign = "center";
                             ctx.textBaseline = "middle";
 
-                            ctx.fillText(`${this.players} on ${this.data.name}`, w/8, h/4);
-                            if(this.IlI0l >= 100) 
-                                ctx.fillText(`${this.IlI0l} total`, w/8, h*0.75);
+                            // Игроки на сервере
+                            ctx.fillText(`${this.players} on ${this.data.name}`, w/2, h/3);
 
-                            ctx.textAlign = "right";
-                            ctx.fillText(`${this.fps} FPS`, w*0.92, h/4);
-                            ctx.fillText(`(${this.IOOl1.region}) ping ${this.ping} ms`, w*0.92, h*0.75);
+                            // Общее кол-во игроков
+                            if(this.IlI0l >= 100)
+                                ctx.fillText(`${this.IlI0l} total`, w/2, 2*h/3);
 
-                            // Иконки
-                            ctx.font = `${Math.round(h/14)}pt FontAwesome`;
-                            ctx.fillText("", w/10, h/4);
-                            ctx.fillText("", w/10, h*0.75);
-
-                            // Геометрические элементы (треугольники)
-                            ctx.strokeStyle = "hsla(" + this.hue + ", 80%, 70%, 0.5)";
-                            ctx.lineWidth = 2;
-
-                            ctx.beginPath();
-                            ctx.moveTo(panelWidth, h*0.1);
-                            ctx.lineTo(panelWidth*0.5, h*0.5);
-                            ctx.lineTo(panelWidth, h*0.9);
-                            ctx.stroke();
-
-                            ctx.beginPath();
-                            ctx.moveTo(w-panelWidth, h*0.1);
-                            ctx.lineTo(w-panelWidth*0.5, h*0.5);
-                            ctx.lineTo(w-panelWidth, h*0.9);
-                            ctx.stroke();
+                            // ---------- Справа: FPS и пинг ----------
+                            ctx.font = `${Math.round(h/5)}pt Play`; 
+                            ctx.fillText(`${this.fps} FPS | (${this.IOOl1.region}) ping ${this.ping} ms`, w/2, h - h/6);
                             // ---------- Обновление текстуры ----------
                             this.texture.needsUpdate = true;
                     }, t.prototype.O0IOl = function () {
