@@ -3880,16 +3880,16 @@
                         if (this.view != null) {
                             let ctx = e;
                             ctx.save();
-                            ctx.translate(scoreboard.px, scoreboard.O101l);
+                            ctx.translate(this.px, this.O101l);
 
-                            const width = scoreboard.OI11I;
-                            const height = scoreboard.I1l11;
+                            const width = this.OI11I;
+                            const height = this.I1l11;
 
                             // ---------- Центр прозрачный ----------
                             ctx.clearRect(0, 0, width, height);
 
                             // ---------- Неоновый бордер ----------
-                            let time = performance.now() * 0.001; // плавная анимация, меньше множитель = медленнее переливание
+                            let time = Date.now() * 0.002; // плавная анимация
                             let gradient = ctx.createLinearGradient(0, 0, width, height);
                             gradient.addColorStop(0, `hsl(${(time*60)%360}, 100%, 50%)`);
                             gradient.addColorStop(0.25, `hsl(${(time*60+90)%360}, 100%, 50%)`);
@@ -3915,9 +3915,9 @@
                             ctx.shadowBlur = 0;
 
                             // ---------- Игрок ----------
-                            let rank = scoreboard.IOOl1.OO1OI.l10Il.status.rank;
-                            let myName = scoreboard.IOOl1.player_name;
-                            let myScore = scoreboard.IOOl1.OO1OI.l10Il.status.score;
+                            let rank = this.IOOl1.OO1OI.l10Il.status.rank;
+                            let myName = this.IOOl1.player_name;
+                            let myScore = this.IOOl1.OO1OI.l10Il.status.score;
 
                             ctx.font = `bold ${Math.round(18*width/512)}pt Play`;
                             ctx.textAlign = "left";
@@ -3932,20 +3932,22 @@
                             ctx.shadowBlur = 0;
 
                             // ---------- Остальные игроки ----------
-                            let m = Math.min(10, scoreboard.view.getUint8(1));
+                            let m = Math.min(10, this.view.getUint8(1));
                             let u = 2;
                             let offsetY = 100;
                             ctx.font = `${Math.round(16*width/512)}pt Play`;
 
                             for (let o = 0; o < m; o++) {
-                                let id = scoreboard.view.getUint8(u);
-                                let score = scoreboard.view.getUint32(u + 4, true) & 0xFFFFFF;
+                                let id = this.view.getUint8(u);
+                                let score = this.view.getUint32(u + 4, true) & 0xFFFFFF;
                                 u += 8;
-                                let name = scoreboard.IOOl1.names.get(id) || "Unknown";
+                                let name = this.IOOl1.names.get(id) || "Unknown";
 
+                                // Прозрачный фон строк
                                 ctx.fillStyle = "rgba(0,0,0,0)";
                                 ctx.fillRect(0, offsetY-14, width, 28);
 
+                                // Текст с легким неоном
                                 ctx.shadowColor = "#0ff";
                                 ctx.shadowBlur = 5;
                                 ctx.fillStyle = "#0ff";
@@ -3960,6 +3962,7 @@
 
                             ctx.restore();
                         }
+
 
 
 
