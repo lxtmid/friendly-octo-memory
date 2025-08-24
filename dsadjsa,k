@@ -3885,105 +3885,104 @@
                             const width = this.OI11I;
                             const height = this.I1l11;
 
-                            // ---------------------------
-                            // Фон с космическим градиентом
-                            // ---------------------------
-                            let bgGradient = ctx.createLinearGradient(0, 0, 0, height);
-                            bgGradient.addColorStop(0, "#0d0d1a");
-                            bgGradient.addColorStop(1, "#1a1a33");
-                            ctx.fillStyle = bgGradient;
+                            // ---------- Карбоновый фон ----------
+                            let patternCanvas = document.createElement("canvas");
+                            patternCanvas.width = 8;
+                            patternCanvas.height = 8;
+                            let pctx = patternCanvas.getContext("2d");
+
+                            // Простая карбон текстура
+                            pctx.fillStyle = "#111";
+                            pctx.fillRect(0, 0, 8, 8);
+                            pctx.fillStyle = "#222";
+                            pctx.fillRect(0, 0, 4, 4);
+                            pctx.fillRect(4, 4, 4, 4);
+
+                            let pattern = ctx.createPattern(patternCanvas, "repeat");
+                            ctx.fillStyle = pattern;
                             ctx.fillRect(0, 0, width, height);
 
-                            // ---------------------------
-                            // Неоновая рамка
-                            // ---------------------------
-                            ctx.shadowColor = "#00FFFF";
-                            ctx.shadowBlur = 15;
-                            ctx.strokeStyle = "#00FFFF";
-                            ctx.lineWidth = 3;
-                            ctx.strokeRect(0, 0, width, height);
-                            ctx.shadowBlur = 0;
+                            // ---------- Боковые панели с анимацией градиента ----------
+                            let time = Date.now() * 0.002; // для плавной смены
+                            let color1 = `hsl(${(time*50)%360}, 100%, 50%)`;
+                            let color2 = `hsl(${(time*50+180)%360}, 100%, 50%)`;
 
-                            // ---------------------------
-                            // Заголовок с glow
-                            // ---------------------------
-                            ctx.font = `bold ${Math.round(26 * width / 512)}pt Play`;
+                            let panelWidth = width / 12;
+                            let leftGradient = ctx.createLinearGradient(0, 0, panelWidth, 0);
+                            leftGradient.addColorStop(0, color1);
+                            leftGradient.addColorStop(1, color2);
+
+                            let rightGradient = ctx.createLinearGradient(width-panelWidth, 0, width, 0);
+                            rightGradient.addColorStop(0, color2);
+                            rightGradient.addColorStop(1, color1);
+
+                            ctx.fillStyle = leftGradient;
+                            ctx.fillRect(0, 0, panelWidth, height);
+
+                            ctx.fillStyle = rightGradient;
+                            ctx.fillRect(width-panelWidth, 0, panelWidth, height);
+
+                            // ---------- Заголовок и HUD ----------
+                            ctx.shadowColor = "#0ff";
+                            ctx.shadowBlur = 10;
+                            ctx.fillStyle = "#0ff";
+                            ctx.font = `bold ${Math.round(26*width/512)}pt Play`;
                             ctx.textAlign = "center";
                             ctx.textBaseline = "top";
-
-                            ctx.shadowColor = "#FF00FF";
-                            ctx.shadowBlur = 12;
-                            ctx.fillStyle = "#FF00FF";
-                            ctx.fillText("SCOREBOARD", width / 2, 10);
-
+                            ctx.fillText("SCOREBOARD", width/2, 10);
                             ctx.shadowBlur = 0;
 
-                            // ---------------------------
-                            // Твой статус с подсветкой glow
-                            // ---------------------------
+                            // ---------- Статус игрока ----------
                             let rank = this.IOOl1.OO1OI.l10Il.status.rank;
                             let myName = this.IOOl1.player_name;
                             let myScore = this.IOOl1.OO1OI.l10Il.status.score;
 
-                            ctx.fillStyle = "rgba(0,255,255,0.15)";
+                            ctx.fillStyle = "rgba(0,255,255,0.05)";
                             ctx.fillRect(0, 50, width, 28);
 
-                            ctx.font = `bold ${Math.round(18 * width / 512)}pt Play`;
+                            ctx.shadowColor = "#0ff";
+                            ctx.shadowBlur = 8;
+                            ctx.fillStyle = "#0ff";
+                            ctx.font = `bold ${Math.round(18*width/512)}pt Play`;
                             ctx.textAlign = "left";
                             ctx.textBaseline = "middle";
-                            ctx.shadowColor = "#00FFFF";
-                            ctx.shadowBlur = 8;
-                            ctx.fillStyle = "#00FFFF";
                             ctx.fillText(`${rank}. ${myName}`, 12, 64);
 
                             ctx.textAlign = "right";
-                            ctx.fillText(myScore, width - 12, 64);
+                            ctx.fillText(myScore, width-12, 64);
                             ctx.shadowBlur = 0;
 
-                            // ---------------------------
-                            // Остальные игроки
-                            // ---------------------------
+                            // ---------- Остальные игроки ----------
                             let m = Math.min(10, this.view.getUint8(1));
                             let u = 2;
                             let offsetY = 100;
-
-                            ctx.font = `${Math.round(16 * width / 512)}pt Play`;
+                            ctx.font = `${Math.round(16*width/512)}pt Play`;
 
                             for (let o = 0; o < m; o++) {
                                 let id = this.view.getUint8(u);
                                 let score = this.view.getUint32(u + 4, true) & 0xFFFFFF;
                                 u += 8;
-
                                 let name = this.IOOl1.names.get(id) || "Unknown";
 
-                                // Неоновый фон строк
+                                // Легкий фон строк
                                 ctx.fillStyle = o % 2 === 0 ? "rgba(0,255,255,0.05)" : "rgba(255,0,255,0.05)";
-                                ctx.fillRect(0, offsetY - 14, width, 28);
+                                ctx.fillRect(0, offsetY-14, width, 28);
 
-                                // Текст игроков с легким glow
-                                ctx.shadowColor = "#00FFFF";
+                                ctx.shadowColor = "#0ff";
                                 ctx.shadowBlur = 5;
-                                ctx.fillStyle = "#00FFFF";
+                                ctx.fillStyle = "#0ff";
                                 ctx.textAlign = "left";
-                                ctx.fillText(`${o + 1}. ${name}`, 12, offsetY);
+                                ctx.fillText(`${o+1}. ${name}`, 12, offsetY);
                                 ctx.textAlign = "right";
-                                ctx.fillText(score, width - 12, offsetY);
+                                ctx.fillText(score, width-12, offsetY);
                                 ctx.shadowBlur = 0;
 
                                 offsetY += 32;
                             }
 
-                            // ---------------------------
-                            // Нижняя неоновая граница
-                            // ---------------------------
-                            let bottomGradient = ctx.createLinearGradient(0, height - 20, 0, height);
-                            bottomGradient.addColorStop(0, "rgba(0,0,0,0)");
-                            bottomGradient.addColorStop(1, "rgba(0,255,255,0.4)");
-                            ctx.fillStyle = bottomGradient;
-                            ctx.fillRect(0, height - 20, width, 20);
-
                             ctx.restore();
                         }
+
 
 
 
