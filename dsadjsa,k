@@ -3877,7 +3877,6 @@
                         if (this.view = t, this.visible) return this.II1OI = !0
                     }, i.prototype.I1ll0 = function (e) {
                         var i, s, l, n, a, o, r, h, u, d, O, c, p, I, m, f, g, y, v;
-                        window.Date = { now: () => performance.now() };
                         if (this.view != null) {
                             let ctx = e;
                             ctx.save();
@@ -3961,7 +3960,6 @@
 
                             ctx.restore();
                         }
-                        requestAnimationFrame(animate);
 
 
 
