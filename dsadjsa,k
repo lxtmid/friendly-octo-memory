@@ -5436,7 +5436,7 @@
 
                             // Основной HUD текст
                             ctx.fillStyle = "hsla(" + this.hue + ", 70%, 80%, 1)";
-                            ctx.font = `${Math.round(h/14)}pt Play`; // увеличенный размер для футуристичности
+                            ctx.font = "30pt Play"; // увеличенный размер для футуристичности
                             ctx.textAlign = "left";
                             ctx.textBaseline = "middle";
 
