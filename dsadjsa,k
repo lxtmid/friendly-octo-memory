@@ -5336,7 +5336,7 @@
                         this.IOOl1 = t;
                         this.canvas = document.createElement("canvas");
                         this.canvas.width = 512;
-                        this.canvas.height = 64;
+                        this.canvas.height = 128;
                         this.texture = new THREE.Texture(this.canvas);
                         this.texture.minFilter = THREE.LinearFilter;
 
