@@ -5333,22 +5333,79 @@
                     }, e
                 }(I1O01), this.InfoBar = function () {
                     function t(t) {
-                        this.IOOl1 = t, this.canvas = document.createElement("canvas"), this.canvas.width = 512,
-                            this.canvas.height = 64,
-                            this.texture = new THREE.Texture(this.canvas), this.texture.minFilter = THREE
-                            .LinearFilter, this.O1lI1 = new THREE.PlaneGeometry(1, 1), this.material = new THREE
-                            .MeshBasicMaterial({
-                                map: this.texture,
-                                transparent: !0,
-                                depthTest: !1,
-                                depthWrite: !1,
-                                blending: THREE.AdditiveBlending
-                            }), this.data = {
-                                name: ""
-                            }, this.I1I1O = new THREE.Mesh(this.O1lI1, this.material), this.I1I1O.scale.set(1, .125,
-                                1), this.I1I1O.position.y = -.5875, this.fps = 60, this.players = 0, this.IlI0l = 0,
-                            this.ping = 0, this.refresh_time = 0
+                        this.IOOl1 = t;
+                        this.canvas = document.createElement("canvas");
+                        this.canvas.width = 512;
+                        this.canvas.height = 64;
+                        this.texture = new THREE.Texture(this.canvas);
+                        this.texture.minFilter = THREE.LinearFilter;
+
+                        this.O1lI1 = new THREE.PlaneGeometry(1, 1);
+                        this.material = new THREE.MeshBasicMaterial({
+                            map: this.texture,
+                            transparent: true,
+                            depthTest: false,
+                            depthWrite: false,
+                            blending: THREE.AdditiveBlending
+                        });
+
+                        this.data = { name: "" };
+                        this.I1I1O = new THREE.Mesh(this.O1lI1, this.material);
+                        this.I1I1O.scale.set(1, 0.125, 1);
+                        this.I1I1O.position.y = -0.5875;
+
+                        this.fps = 60;
+                        this.players = 0;
+                        this.IlI0l = 0;
+                        this.ping = 0;
+                        this.refresh_time = 0;
+
+                        // ---------- Футуристичный дизайн сразу на canvas ----------
+                        var ctx = this.canvas.getContext("2d");
+                        var w = this.canvas.width;
+                        var h = this.canvas.height;
+
+                        // Градиентный фон
+                        var grad = ctx.createLinearGradient(0, 0, w, h);
+                        grad.addColorStop(0, "rgba(10,10,30,0.95)");
+                        grad.addColorStop(1, "rgba(25,25,55,0.95)");
+                        ctx.fillStyle = grad;
+                        ctx.fillRect(0, 0, w, h);
+
+                        // Светящиеся линии по бокам
+                        ctx.fillStyle = "rgba(0, 200, 255, 0.3)";
+                        ctx.shadowColor = "rgba(0, 200, 255, 0.7)";
+                        ctx.shadowBlur = 12;
+                        ctx.fillRect(0, 0, 6, h);
+                        ctx.fillRect(w - 6, 0, 6, h);
+                        ctx.shadowBlur = 0;
+
+                        // Декоративные треугольники
+                        ctx.strokeStyle = "rgba(0, 200, 255, 0.5)";
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(6, h * 0.1);
+                        ctx.lineTo(0, h / 2);
+                        ctx.lineTo(6, h * 0.9);
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.moveTo(w - 6, h * 0.1);
+                        ctx.lineTo(w, h / 2);
+                        ctx.lineTo(w - 6, h * 0.9);
+                        ctx.stroke();
+
+                        // Футуристический текст-заглушка
+                        ctx.fillStyle = "#00FFFF";
+                        ctx.font = "20pt Play";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText("INFOBAR", w / 2, h / 2);
+
+                        // Обновление текстуры
+                        this.texture.needsUpdate = true;
                     }
+
                     return t.prototype.setHue = function (t) {
                         if (t !== this.hue) return this.hue = t, this.repaint()
                     }, t.prototype.OlI1O = function (t, e) {
